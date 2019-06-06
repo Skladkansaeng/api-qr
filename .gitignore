@@ -1,0 +1,9 @@
+
+\.idea/
+
+*/migrations/__pycache__/
+
+*.pyc
+
+*.sqlite3
+
