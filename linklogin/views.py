@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, login
 from rest_framework import mixins, status
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -47,7 +48,7 @@ class LoginLink(mixins.ListModelMixin, GenericViewSet):
 
     def list(self, request, *args, **kwargs):
         GenericViewSet.queryset = AuthToken.objects.filter(token=self.kwargs.get('token'))
+        login(request, AuthToken.get_user(self.kwargs.get('token')))
         queryset = self.filter_queryset(self.get_queryset())
-
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)

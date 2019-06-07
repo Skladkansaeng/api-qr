@@ -12,6 +12,10 @@ class AuthToken(models.Model):
         return User.objects.filter(user=user)
 
     @staticmethod
+    def get_user(token):
+        return AuthToken.objects.filter(token=token).last().user
+
+    @staticmethod
     def get_token():
         return get_random_string(length=32)
 
