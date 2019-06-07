@@ -12,17 +12,13 @@ class UserSerializer(serializers.ModelSerializer):
 class GetUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = (
-            'id',
-            'username',
-            'email',
-        )
+        fields = '__all__'
 
 
 class LoginSerializer(serializers.ModelSerializer):
-    user = GetUserSerializer
+    user = GetUserSerializer()
 
     class Meta:
         model = AuthToken
-        fields = ('user'
+        fields = ('user',
                   )

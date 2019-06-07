@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from rest_framework import mixins, status
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -10,6 +9,16 @@ from .models import AuthToken
 class CreateLink(mixins.CreateModelMixin, GenericViewSet):
     serializer_class = UserSerializer
     model = AuthToken
+    action_serializers = {
+        'create': UserSerializer,
+        'list': LoginSerializer,
+    }
+
+    def get_serializer_class(self):
+        if hasattr(self, 'action_serializers'):
+            if self.action in self.action_serializers:
+                return self.action_serializers[self.action]
+        return super().get_serializer_class()
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -28,7 +37,20 @@ class CreateLink(mixins.CreateModelMixin, GenericViewSet):
 #     return JsonResponse({}, status=status.HTTP_200_OK)
 class LoginLink(mixins.ListModelMixin, GenericViewSet):
     serializer_class = LoginSerializer
+    action_serializers = {
+        'create': UserSerializer,
+        'list': LoginSerializer,
+    }
+
+    def get_serializer_class(self):
+        if hasattr(self, 'action_serializers'):
+            if self.action in self.action_serializers:
+                return self.action_serializers[self.action]
+        return super().get_serializer_class()
 
     def list(self, request, *args, **kwargs):
-        query = AuthToken.objects.filter(self.request.user)
-        return Response(LoginSerializer(query).data)
+        GenericViewSet.queryset = AuthToken.objects.filter(token=self.kwargs.get('token'))
+        queryset = self.filter_queryset(self.get_queryset())
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
