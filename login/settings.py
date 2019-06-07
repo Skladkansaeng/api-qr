@@ -25,7 +25,7 @@ SECRET_KEY = 'gwudvau!$!%&#i9%3!=qg^j064(^jq=8a)7vq%%vc7z5#vi=nv'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -72,7 +72,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'login.wsgi.application'
-
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases

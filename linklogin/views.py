@@ -32,9 +32,6 @@ class CreateLink(mixins.CreateModelMixin, GenericViewSet):
         serializer.save(user=self.request.user, token=AuthToken.get_token())
 
 
-# def LoginLink(request, str_id):
-#     print(request.user)
-#     return JsonResponse({}, status=status.HTTP_200_OK)
 class LoginLink(mixins.ListModelMixin, GenericViewSet):
     serializer_class = LoginSerializer
     action_serializers = {
